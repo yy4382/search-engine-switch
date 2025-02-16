@@ -23,13 +23,13 @@ const searchEngines = [
     queryGetter: () => document.querySelector("h1")?.innerText ?? null,
   },
   {
-    name: "必应",
+    name: "Bing",
     url: "https://www.bing.com/search?q=%s",
     identifier: "bing.com",
     queryGetter: () => new URLSearchParams(window.location.search).get("q"),
   },
   {
-    name: "百度",
+    name: "Baidu",
     url: "https://www.baidu.com/s?wd=%s",
     identifier: "baidu.com",
     queryGetter: () => new URLSearchParams(window.location.search).get("wd"),
@@ -37,7 +37,7 @@ const searchEngines = [
 ];
 
 /**
- * 获取当前搜索关键词
+ * Get current search query
  * @returns {string|null}
  */
 function getSearchQuery() {
@@ -46,14 +46,14 @@ function getSearchQuery() {
     url.includes(engine.identifier)
   );
   if (!engine) {
-    throw new Error("未找到匹配的搜索引擎");
+    throw new Error("No matching search engine found");
   }
   const query = engine.queryGetter();
   return query;
 }
 
 /**
- * 获取用户选择的搜索引擎
+ * Get user selected search engine
  * @returns {Promise<SearchEngine|null>}
  */
 async function getSelectedEngine() {
@@ -71,10 +71,10 @@ async function getSelectedEngine() {
     return selectedEngine;
   } catch (error) {
     if (error === null) {
-      // 用户取消选择
+      // User cancelled selection
       return null;
     }
-    alert(`出现错误，使用默认 ${searchEngines[0].name} 引擎：` + error.message);
+    alert(`Error occurred, using default ${searchEngines[0].name} engine: ` + error.message);
     return searchEngines[0];
   } finally {
     // @ts-ignore
@@ -158,17 +158,17 @@ function drawSelectDialog(searchEngines, lastUse, completePromise) {
   `;
   dialog.innerHTML = `
     <form method="dialog">
-      <p class="ses-title">选择搜索引擎</p>
+      <p class="ses-title">Select Search Engine</p>
       <div id="ses-engines-list"></div>
       <div class="ses-button-group">
-        <button type="button" class="cancel-btn" id="ses-cancelBtn">取消</button>
-        <button type="submit" class="submit-btn">确认提交</button>
+        <button type="button" class="cancel-btn" id="ses-cancelBtn">Cancel</button>
+        <button type="submit" class="submit-btn">Confirm</button>
       </div>
     </form>
   `;
   const enginesDiv = dialog.querySelector("#ses-engines-list");
   if (!enginesDiv) {
-    completePromise.reject(new Error("未找到搜索引擎选择框"));
+    completePromise.reject(new Error("Search engine selection box not found"));
     return dialogRemover;
   }
   searchEngines.forEach((engine) => {
@@ -193,14 +193,14 @@ function drawSelectDialog(searchEngines, lastUse, completePromise) {
     const formData = new FormData(form);
     const selectedEngineName = formData.get("engine");
     if (!selectedEngineName) {
-      completePromise.reject(new Error("未选择搜索引擎"));
+      completePromise.reject(new Error("No search engine selected"));
       return;
     }
     const selectedEngine = searchEngines.find(
       (engine) => engine.name === selectedEngineName
     );
     if (!selectedEngine) {
-      completePromise.reject(new Error("未找到匹配的搜索引擎"));
+      completePromise.reject(new Error("No matching search engine found"));
       return;
     }
     completePromise.resolve(selectedEngine);
@@ -222,7 +222,7 @@ function drawSelectDialog(searchEngines, lastUse, completePromise) {
 }
 
 /**
- * 创建搜索引擎选择窗口
+ * Create search engine selector window
  * @param {string} query
  * @param {SearchEngine} searchEngine
  */
@@ -231,11 +231,11 @@ function createEngineSelector(query, searchEngine) {
   window.open(searchUrl, "_blank");
 }
 
-// 主函数
+// Main function
 async function main() {
   const query = getSearchQuery();
   if (!query) {
-    throw new Error("未找到搜索关键词");
+    throw new Error("No search keyword found");
   }
   const engine = await getSelectedEngine();
   if (!engine) {
