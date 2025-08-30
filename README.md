@@ -8,6 +8,8 @@ A bookmarklet that allows you to switch between search engines on the fly.
 - Bing
 - Baidu
 - Perplexity
+- ChatGPT
+- Claude
 
 ## Usage
 
