@@ -23,6 +23,21 @@ const searchEngines = [
     queryGetter: () => document.querySelector("h1")?.innerText ?? null,
   },
   {
+    name: "ChatGPT",
+    url: "https://chatgpt.com/?q=%s",
+    identifier: "chatgpt.com",
+    queryGetter: () =>
+      document.getElementById("prompt-textarea")?.textContent ?? null,
+  },
+  {
+    name: "Claude",
+    url: "https://claude.ai/new?q=%s",
+    identifier: "claude.ai",
+    queryGetter: () =>
+      document.querySelector('[aria-label="Write your prompt to Claude"]')
+        ?.textContent ?? null,
+  },
+  {
     name: "Bing",
     url: "https://www.bing.com/search?q=%s",
     identifier: "bing.com",
@@ -74,7 +89,10 @@ async function getSelectedEngine() {
       // User cancelled selection
       return null;
     }
-    alert(`Error occurred, using default ${searchEngines[0].name} engine: ` + error.message);
+    alert(
+      `Error occurred, using default ${searchEngines[0].name} engine: ` +
+        error.message
+    );
     return searchEngines[0];
   } finally {
     // @ts-ignore
